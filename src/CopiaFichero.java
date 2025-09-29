@@ -8,7 +8,7 @@ public class CopiaFichero {
     public void copy() {
         Path path1 = Paths.get("dir\\origen.txt");
         Path path2 = Paths.get("dir\\copia.txt");
-        Path path3 = Paths.get("backup");
+        Path path3 = Paths.get("backup\\copia.txt");
 
         try (BufferedReader reader = Files.newBufferedReader(path1);
                 BufferedWriter writer = Files.newBufferedWriter(path2)) {
@@ -19,7 +19,7 @@ public class CopiaFichero {
                 writer.newLine();
             }
 
-            Files.createDirectories(path3);
+            Files.createDirectories(path3.getParent());
             Files.copy(path2, path3);
 
         } catch (Exception e) {
