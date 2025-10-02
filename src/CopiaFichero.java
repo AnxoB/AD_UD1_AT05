@@ -1,30 +1,30 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class CopiaFichero {
     public void copy() {
-        Path path1 = Paths.get("dir\\origen.txt");
-        Path path2 = Paths.get("dir\\copia.txt");
-        Path path3 = Paths.get("backup\\copia.txt");
+        Path pathOrigen = Paths.get("dir\\origen.txt");
+        Path pathCopia = Paths.get("dir\\copia.txt");
+        Path pathBackup = Paths.get("backup");
+        Path pathBackupFile = Paths.get("backup\\copia.txt");
 
-        try (BufferedReader reader = Files.newBufferedReader(path1);
-                BufferedWriter writer = Files.newBufferedWriter(path2)) {
+        try {
+            Files.copy(pathOrigen, pathCopia, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Contenido copiado de origen.txt a copia.txt");
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                writer.write(line, 0, line.length());
-                writer.newLine();
+            if (!Files.exists(pathBackup)) {
+                Files.createDirectories(pathBackup);
+                System.out.println("Directorio backup creado");
             }
 
-            Files.createDirectories(path3.getParent());
-            Files.copy(path2, path3);
+            Files.move(pathCopia, pathBackupFile, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Archivo copia.txt movido al directorio backup");
 
         } catch (Exception e) {
-            System.out.println("Ha ocurrido un error");
+            System.out.println("Ha ocurrido un error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
-
 }
